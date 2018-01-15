@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
+
 /**
  *
  * @author gkonto
@@ -61,14 +62,14 @@ public class LoginFrame extends javax.swing.JFrame {
         jButton1.setActionCommand("Sign up");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                
+                jButton1ActionPerformed(evt);
             }
         });
 
         jButton2.setText("Sign in");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-              
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -116,10 +117,6 @@ public class LoginFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     
-    void checkEmpty(String name, String pass) {
-    	 
-    }
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String sql = "Insert into users (username, password) values(?, ?)";
         
@@ -146,6 +143,35 @@ public class LoginFrame extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String sql = "select * from users where username = ? and password = ?";
+        try {
+        	System.out.println("Ena");
+            pst = conn.prepareStatement(sql);
+            System.out.println("Duo");
+            
+            pst.setString(1, jTextField1.getText());
+            System.out.println("Tria");
+            
+            pst.setString(2, jPasswordField1.getText());
+            System.out.println("Tessera");
+            
+            rs = pst.executeQuery();
+            System.out.println("Pente");
+            
+            if (rs.next()) {
+                System.out.println("Logged in successfully!");
+            	this.setVisible(false);
+            	MainWindow.display();
+
+            } else {
+                System.out.println("Username or password is not correct!");
+            }
+        } catch (Exception e) {
+        	JOptionPane.showMessageDialog(null, e);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
  
     /**
