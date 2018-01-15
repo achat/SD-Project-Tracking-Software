@@ -70,6 +70,21 @@ public  class MainWindow extends JFrame {
 		});
 	}
 	
+	public static void refreshTable() { 
+		//clearTable();
+		try {
+			
+			String query = "select id, title, assignee, state  from tasks ";			
+			PreparedStatement pst = connection.prepareStatement(query);
+			ResultSet rs = pst.executeQuery();			
+			table_1.setModel(DbUtils.resultSetToTableModel(rs));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		taskNum_ = table_1.getRowCount();
+	}
+	
 	/**
 	 * Create the frame.
 	 */
@@ -105,7 +120,7 @@ public  class MainWindow extends JFrame {
 			}
 		));
 		scrollPane.setViewportView(table_1);
-
+		refreshTable();
 	}
 
 }
