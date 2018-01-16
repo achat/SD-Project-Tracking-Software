@@ -1,8 +1,4 @@
-
-
 import java.awt.BorderLayout;
-
-
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -97,13 +93,14 @@ public  class MainWindow extends JFrame {
 		
 		getContentPane().setLayout(null);
 		
-		JButton btnAddTask = new JButton("");
-		btnAddTask.setIcon(null);
+		JButton btnAddTask = new JButton("Add");
+		//btnAddTask.setIcon(new ImageIcon(MainWindow.class.getResource("/SD-Project-Tracking-Software/icons8-plus-50.png")));
 		btnAddTask.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				TaskWindow.display(null);
 			}	
 		});
-		btnAddTask.setBounds(23, 12, 38, 27);
+		btnAddTask.setBounds(23, 12, 66, 27);
 		getContentPane().add(btnAddTask);
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -120,7 +117,22 @@ public  class MainWindow extends JFrame {
 			}
 		));
 		scrollPane.setViewportView(table_1);
-		
+		JButton btnEdit = new JButton("Edit");
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int selection = table_1.getSelectedRow();
+				String value = table_1.getModel().getValueAt(selection, 1).toString();
+				if (selection != -1) { 
+					Task task = new Task();
+					task.fillFromDb(selection);
+					TaskWindow.display(task);
+				} else {
+					System.out.println("No task selected for edit!");
+				}
+			}
+		});
+		btnEdit.setBounds(740, 12, 76, 27);
+		getContentPane().add(btnEdit);
 		refreshTable();
 	}
 
