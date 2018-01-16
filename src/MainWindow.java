@@ -120,6 +120,7 @@ public  class MainWindow extends JFrame {
 			}
 		));
 		scrollPane.setViewportView(table_1);
+		
 		refreshTable();
 	}
 

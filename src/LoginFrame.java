@@ -136,7 +136,7 @@ public class LoginFrame extends javax.swing.JFrame {
             System.out.println("Registered");
             pst.execute();
         } catch (Exception e) {
-           // TODO uncomment later JOptionPane.showConfirmDialog(null, e);
+        	JOptionPane.showConfirmDialog(null, e);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
