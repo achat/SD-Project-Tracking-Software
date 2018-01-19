@@ -2,7 +2,7 @@
 
 **PLEASE READ**
 
-Before you run this application you should have a **locahost web server**.
+Before you run this application you should have a **locahost web server** and [JAVA](https://www.java.com/en/) installed (min 1.4.0).
 
 If you don't know how, read [this](https://github.com/tpliakas/SD-Project-Tracking-Software/wiki/Create-your-localhost-web-server.) guide in our wiki.
 
