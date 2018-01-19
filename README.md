@@ -42,4 +42,4 @@ If you still having issues,  do not hesitate to contact any of the contributors 
 - Convert passwords to hash for increased security.
 - When user clicks on task, details would show beneath it.
 - After adding a task, database will not not refresh and the object will be returned directly to main window.
-- Explanation text would be addeed when exception exists.
+- Explanation text will be be added when exception exists.
