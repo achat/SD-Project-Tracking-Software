@@ -27,18 +27,15 @@ import java.awt.Color;
 
 public class TaskWindow extends JFrame {
 
-	private JLayeredPane contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_5;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JComboBox comboBox_1;
+	private JTextField txtFieldTaskID;
+	private JTextField txtFieldDescription;
+	private JTextField txtFieldTitle;
+	private JTextField txtFieldDate;
+	private JComboBox comboBoxState;
 	private Connection connection = null;
     PreparedStatement pst = null;
     private String timeStamp_;
-    private JComboBox comboBox;
+    private JComboBox comboBoxAssignee;
     
     private int prevId_; 
 	private String prevTitle_;
@@ -54,7 +51,6 @@ public class TaskWindow extends JFrame {
     }
     
     private static void addNewTask() {
-    	System.out.println("Eimai add Task");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -101,7 +97,7 @@ public class TaskWindow extends JFrame {
 	        ResultSet rs = pst.executeQuery();
 	        while (rs.next()) {
 	        	String name = rs.getString("username");
-	        	comboBox.addItem(name);
+	        	comboBoxAssignee.addItem(name);
 	        }
 	    } catch (Exception e) {
 	       JOptionPane.showConfirmDialog(null, e);
@@ -117,66 +113,66 @@ public class TaskWindow extends JFrame {
 		
 		getContentPane().setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Task ID");
-		lblNewLabel.setBounds(40, 53, 70, 15);
-		getContentPane().add(lblNewLabel);
+		JLabel labelTaskID = new JLabel("Task ID");
+		labelTaskID.setBounds(40, 53, 70, 15);
+		getContentPane().add(labelTaskID);
 		
-		JLabel lblAssignee = new JLabel("Assignee");
-		lblAssignee.setBounds(40, 158, 70, 35);
-		getContentPane().add(lblAssignee);
+		JLabel labelAssignee = new JLabel("Assignee");
+		labelAssignee.setBounds(40, 158, 70, 35);
+		getContentPane().add(labelAssignee);
 		
-		JLabel lblBrief = new JLabel("Title");
-		lblBrief.setBounds(40, 89, 70, 15);
-		getContentPane().add(lblBrief);
+		JLabel labelTitle = new JLabel("Title");
+		labelTitle.setBounds(40, 89, 70, 15);
+		getContentPane().add(labelTitle);
 		
-		JLabel lblDescription = new JLabel("Description");
-		lblDescription.setBounds(37, 276, 107, 15);
-		getContentPane().add(lblDescription);
+		JLabel labelDescription = new JLabel("Description");
+		labelDescription.setBounds(37, 276, 107, 15);
+		getContentPane().add(labelDescription);
 		
-		textField_2 = new JTextField();
-		textField_2.setEnabled(false);
-		textField_2.setEditable(false);
-		textField_2.setBounds(160, 51, 165, 24);
-		getContentPane().add(textField_2);
-		textField_2.setColumns(10);
-		textField_2.setText(Integer.toString(MainWindow.taskNum_ + 1));
+		txtFieldTaskID = new JTextField();
+		txtFieldTaskID.setEnabled(false);
+		txtFieldTaskID.setEditable(false);
+		txtFieldTaskID.setBounds(160, 51, 165, 24);
+		getContentPane().add(txtFieldTaskID);
+		txtFieldTaskID.setColumns(10);
+		txtFieldTaskID.setText(Integer.toString(TaskListWindow.taskNum_ + 1));
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
-		textField_5.setBounds(157, 274, 306, 146);
-		getContentPane().add(textField_5);
+		txtFieldDescription = new JTextField();
+		txtFieldDescription.setColumns(10);
+		txtFieldDescription.setBounds(157, 274, 306, 146);
+		getContentPane().add(txtFieldDescription);
 		
-		comboBox = new JComboBox();
+		comboBoxAssignee = new JComboBox();
 		
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Unassigned"}));
-		comboBox.setBounds(160, 163, 165, 30);
-		getContentPane().add(comboBox);
+		comboBoxAssignee.setModel(new DefaultComboBoxModel(new String[] {"Unassigned"}));
+		comboBoxAssignee.setBounds(160, 163, 165, 30);
+		getContentPane().add(comboBoxAssignee);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(160, 87, 391, 24);
-		getContentPane().add(textField_3);
+		txtFieldTitle = new JTextField();
+		txtFieldTitle.setColumns(10);
+		txtFieldTitle.setBounds(160, 87, 391, 24);
+		getContentPane().add(txtFieldTitle);
 
-		JLabel lblState = new JLabel("State");
-		lblState.setBounds(40, 129, 70, 15);
-		getContentPane().add(lblState);
+		JLabel labelState = new JLabel("State");
+		labelState.setBounds(40, 129, 70, 15);
+		getContentPane().add(labelState);
 		
-		comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"New", "Under Dev", "Completed", "Closed"}));
-		comboBox_1.setBounds(160, 121, 165, 30);
-		getContentPane().add(comboBox_1);
+		comboBoxState = new JComboBox();
+		comboBoxState.setModel(new DefaultComboBoxModel(new String[] {"New", "Under Dev", "Completed", "Closed"}));
+		comboBoxState.setBounds(160, 121, 165, 30);
+		getContentPane().add(comboBoxState);
 		
-		JLabel lblDate = new JLabel("Date");
-		lblDate.setBounds(40, 210, 70, 35);
-		getContentPane().add(lblDate);
+		JLabel labelDate = new JLabel("Date");
+		labelDate.setBounds(40, 210, 70, 35);
+		getContentPane().add(labelDate);
 		
-		textField_4 = new JTextField();
-		textField_4.setEnabled(true);
-		textField_4.setEditable(false);
-		textField_4.setColumns(10);
-		textField_4.setBounds(160, 218, 165, 24);
-		textField_4.setText(timeStamp_);
-		getContentPane().add(textField_4);
+		txtFieldDate = new JTextField();
+		txtFieldDate.setEnabled(true);
+		txtFieldDate.setEditable(false);
+		txtFieldDate.setColumns(10);
+		txtFieldDate.setBounds(160, 218, 165, 24);
+		txtFieldDate.setText(timeStamp_);
+		getContentPane().add(txtFieldDate);
 
 		appendUsersToCombo();
 	}
@@ -184,11 +180,11 @@ public class TaskWindow extends JFrame {
 	public TaskWindow() {
 		createWinCore();
 		
-		JButton btnDone = new JButton("Done");
-		btnDone.setBounds(403, 432, 117, 25);
-		getContentPane().add(btnDone);
+		JButton buttonDone = new JButton("Done");
+		buttonDone.setBounds(403, 432, 117, 25);
+		getContentPane().add(buttonDone);
 		
-		btnDone.addActionListener(new ActionListener() {
+		buttonDone.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {	
 		String sql = "Insert into tasks (title, description, state, assignee, date_created) values (?, ?, ?, ?, ?)";
 
@@ -196,10 +192,10 @@ public class TaskWindow extends JFrame {
 		    	PreparedStatement pst = null;
 		    	pst = connection.prepareStatement(sql);
 		    	Task task = new Task();
-		        task.setTitle(textField_3.getText());
-		        task.setDescription(textField_5.getText());
-		        task.setState(String.valueOf(comboBox_1.getSelectedItem()));
-		        task.setAssignee(String.valueOf(comboBox.getSelectedItem()));
+		        task.setTitle(txtFieldTitle.getText());
+		        task.setDescription(txtFieldDescription.getText());
+		        task.setState(String.valueOf(comboBoxState.getSelectedItem()));
+		        task.setAssignee(String.valueOf(comboBoxAssignee.getSelectedItem()));
 		        
 		        if (task.getTitle().equals("")) {
 		        	task.setTitle(null);
@@ -213,7 +209,7 @@ public class TaskWindow extends JFrame {
 		        pst.setString(5, task.getDateCreated());
 		        
 		        if (!pst.execute()) {
-		        	MainWindow.refreshTable();
+		        	TaskListWindow.refreshTable();
 		        }
 		    } catch (Exception e) {
 		       JOptionPane.showConfirmDialog(null, e);
@@ -243,11 +239,11 @@ public class TaskWindow extends JFrame {
 	}
 	
 	private boolean needsUpdate() {
-		if ((textField_3.getText() != prevTitle_) ||
-				(textField_5.getText() != prevDescription_) ||
-				(textField_4.getText() != prevDateCreated_) ||
-				(prevAssignee_ != comboBox.getSelectedItem().toString()) ||
-				(prevState_ != comboBox_1.getSelectedItem().toString()))
+		if ((txtFieldTitle.getText() != prevTitle_) ||
+				(txtFieldDescription.getText() != prevDescription_) ||
+				(txtFieldDate.getText() != prevDateCreated_) ||
+				(prevAssignee_ != comboBoxAssignee.getSelectedItem().toString()) ||
+				(prevState_ != comboBoxState.getSelectedItem().toString()))
 			{
 				return true;
 			}
@@ -259,15 +255,15 @@ public class TaskWindow extends JFrame {
 		createWinCore();
 		task_ = task;
 		
-		textField_2.setText(Integer.toString(task.getId()));
-		textField_3.setText(task.getTitle());
-		textField_5.setText(task.getDescription());
-        textField_4.setText(task.getDateCreated());
+		txtFieldTaskID.setText(Integer.toString(task.getId()));
+		txtFieldTitle.setText(task.getTitle());
+		txtFieldDescription.setText(task.getDescription());
+        txtFieldDate.setText(task.getDateCreated());
         
         storePrevVals(task);
         
-        comboSetSelectedByValue(comboBox_1, task.getState());
-        comboSetSelectedByValue(comboBox, task.getAssignee());
+        comboSetSelectedByValue(comboBoxState, task.getState());
+        comboSetSelectedByValue(comboBoxAssignee, task.getAssignee());
 		
 		JButton btnDone = new JButton("Done");
 		btnDone.setBounds(403, 432, 117, 25);
@@ -281,14 +277,14 @@ public class TaskWindow extends JFrame {
 				try { 
 					PreparedStatement pst = conn.prepareStatement(sql);
 			  
-					pst.setString(1, textField_3.getText());
-					pst.setString(2, textField_5.getText());
-					pst.setString(3, comboBox.getSelectedItem().toString());
-					pst.setString(4, comboBox_1.getSelectedItem().toString());
+					pst.setString(1, txtFieldTitle.getText());
+					pst.setString(2, txtFieldDescription.getText());
+					pst.setString(3, comboBoxAssignee.getSelectedItem().toString());
+					pst.setString(4, comboBoxState.getSelectedItem().toString());
 					pst.setInt(5, task_.getId());
 			        
 		            pst.execute();
-		            MainWindow.refreshTable();
+		            TaskListWindow.refreshTable();
 
 				} catch (Exception e) {
 					JOptionPane.showConfirmDialog(null, e);

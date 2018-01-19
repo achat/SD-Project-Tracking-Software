@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 
 public class JavaConnector {
 	public static Connection ConnectDb () {
-		String jdbcUrl = "jdbc:mysql://localhost:8888/sdptsdb?useSSL=false";
+		String jdbcUrl = "jdbc:mysql://localhost/sdptsdb?useSSL=false";
 		String user = "root";
 		String pass = "";
 		
