@@ -47,18 +47,17 @@ import javax.swing.*;
 
 public  class MainWindow extends JFrame {
 
-	static JTable table_1;
-	static Connection connection = null;
-	static int taskNum_;
+	private JTable table_1;
+	private Connection connection = null;
+	private int taskNum_;
 	/**
 	 * Launch the application.
 	 */
-	public static void display() {
+	public void display() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow frame = new MainWindow();
-					frame.setVisible(true);
+					setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -66,7 +65,15 @@ public  class MainWindow extends JFrame {
 		});
 	}
 	
-	public static void refreshTable() { 
+	public JTable getTable() {
+		return table_1;
+	}
+	
+	public int getTaskNum() {
+		return taskNum_;
+	}
+	
+	public void refreshTable() { 
 		//clearTable();
 		try {
 			
@@ -90,16 +97,10 @@ public  class MainWindow extends JFrame {
 		
 		setBounds(200, 200, 830, 484);
 		
-		
 		getContentPane().setLayout(null);
 		
 		JButton btnAddTask = new JButton("Add");
-		//btnAddTask.setIcon(new ImageIcon(MainWindow.class.getResource("/SD-Project-Tracking-Software/icons8-plus-50.png")));
-		btnAddTask.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				TaskWindow.display(null);
-			}	
-		});
+		btnAddTask.addActionListener(new AddTask(this));
 		btnAddTask.setBounds(23, 12, 66, 27);
 		getContentPane().add(btnAddTask);
 		
@@ -118,19 +119,7 @@ public  class MainWindow extends JFrame {
 		));
 		scrollPane.setViewportView(table_1);
 		JButton btnEdit = new JButton("Edit");
-		btnEdit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int selection = table_1.getSelectedRow();
-				String value = table_1.getModel().getValueAt(selection, 1).toString();
-				if (selection != -1) { 
-					Task task = new Task();
-					task.fillFromDb(selection);
-					TaskWindow.display(task);
-				} else {
-					System.out.println("No task selected for edit!");
-				}
-			}
-		});
+		btnEdit.addActionListener(new EditTask(this));
 		btnEdit.setBounds(740, 12, 76, 27);
 		getContentPane().add(btnEdit);
 		refreshTable();

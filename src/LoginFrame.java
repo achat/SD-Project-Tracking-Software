@@ -24,8 +24,10 @@ public class LoginFrame extends javax.swing.JFrame {
     Connection   conn = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
+    MainWindow mainWin_ = null;
         
     public LoginFrame() {
+    	mainWin_ = new MainWindow();
         initComponents();
         conn = JavaConnector.ConnectDb();
     }
@@ -147,23 +149,14 @@ public class LoginFrame extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String sql = "select * from users where username = ? and password = ?";
         try {
-        	System.out.println("Ena");
-            pst = conn.prepareStatement(sql);
-            System.out.println("Duo");
-            
+        	pst = conn.prepareStatement(sql);
             pst.setString(1, jTextField1.getText());
-            System.out.println("Tria");
-            
             pst.setString(2, jPasswordField1.getText());
-            System.out.println("Tessera");
-            
             rs = pst.executeQuery();
-            System.out.println("Pente");
-            
             if (rs.next()) {
                 System.out.println("Logged in successfully!");
             	this.setVisible(false);
-            	MainWindow.display();
+            	mainWin_.display();
 
             } else {
                 System.out.println("Username or password is not correct!");
@@ -177,12 +170,7 @@ public class LoginFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void initialize() {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+    public void initialize() {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {

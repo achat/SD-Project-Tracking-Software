@@ -36,6 +36,9 @@ public class TaskWindow extends JFrame {
     PreparedStatement pst = null;
     private String timeStamp_;
     private JComboBox comboBoxAssignee;
+    private JButton buttonAdd;
+    private JButton buttonEdit;
+
     
     private int prevId_; 
 	private String prevTitle_;
@@ -44,32 +47,93 @@ public class TaskWindow extends JFrame {
 	private String prevAssignee_;
 	private String prevState_;
     private Task task_;
+    private MainWindow mainWin_;
     
-    private static void editTask(Task task) {
-    	TaskWindow frame = new TaskWindow(task);
-    	frame.setVisible(true);
+    public void editTask(Task task) {
+    	
+    	buttonEdit.setVisible(true);
+		txtFieldTaskID.setText(Integer.toString(task.getId()));
+		txtFieldTitle.setText(task.getTitle());
+		txtFieldDescription.setText(task.getDescription());
+        txtFieldDate.setText(task.getDateCreated());
+        
+        storePrevVals(task);
+        
+        comboSetSelectedByValue(comboBoxState, task.getState());
+        comboSetSelectedByValue(comboBoxAssignee, task.getAssignee());
+		
+		buttonEdit.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {	
+			if (needsUpdate()) {
+				String sql = "UPDATE tasks SET title = ?, description = ?, assignee = ?, state = ? WHERE id = ?";
+				Connection conn = JavaConnector.ConnectDb();		
+				try { 
+					PreparedStatement pst = conn.prepareStatement(sql);
+					pst.setString(1, txtFieldTitle.getText());
+					pst.setString(2, txtFieldDescription.getText());
+					pst.setString(3, comboBoxAssignee.getSelectedItem().toString());
+					pst.setString(4, comboBoxState.getSelectedItem().toString());
+					pst.setInt(5, task.getId());
+							            pst.execute();
+		            mainWin_.refreshTable();
+
+				} catch (Exception e) {
+					System.out.println("GAMO TO");
+
+					JOptionPane.showConfirmDialog(null, e);
+				}
+			}
+			dispose();
+			}
+		});
+    	setVisible(true);
     }
     
-    private static void addNewTask() {
+    public void addNewTask() {
+    	buttonAdd.setVisible(true);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					TaskWindow frame = new TaskWindow();
-					frame.setVisible(true);
+				try {		
+					buttonAdd.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {	
+					String sql = "Insert into tasks (title, description, state, assignee, date_created) values (?, ?, ?, ?, ?)";
+
+					    try {
+					    	PreparedStatement pst = null;
+					    	pst = connection.prepareStatement(sql);
+					    	Task task = new Task();
+					        task.setTitle(txtFieldTitle.getText());
+					        task.setDescription(txtFieldDescription.getText());
+					        task.setState(String.valueOf(comboBoxState.getSelectedItem()));
+					        task.setAssignee(String.valueOf(comboBoxAssignee.getSelectedItem()));
+					        
+					        if (task.getTitle().equals("")) {
+					        	task.setTitle(null);
+					        }
+					        task.setDateCreated(new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()));
+					     		        
+					        pst.setString(1, task.getTitle());
+					        pst.setString(2, task.getDescription());
+					        pst.setString(3, task.getState());
+					        pst.setString(4, task.getAssignee());
+					        pst.setString(5, task.getDateCreated());
+					        
+					        if (!pst.execute()) {
+					        	mainWin_.refreshTable();
+					        }
+					    } catch (Exception e) {
+					       JOptionPane.showConfirmDialog(null, e);
+					    }
+						dispose();
+						}
+					});
+					setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});	
     }
-    
-    public static void display(Task task) {
-		if (task != null) {
-			editTask(task);
-		} else {
-			addNewTask();
-		}
-	}
 	
 	private int getUserId(String assignee) {
 		int id = 0;
@@ -135,7 +199,7 @@ public class TaskWindow extends JFrame {
 		txtFieldTaskID.setBounds(160, 51, 165, 24);
 		getContentPane().add(txtFieldTaskID);
 		txtFieldTaskID.setColumns(10);
-		txtFieldTaskID.setText(Integer.toString(TaskListWindow.taskNum_ + 1));
+		txtFieldTaskID.setText(Integer.toString(mainWin_.getTaskNum() + 1));
 		
 		txtFieldDescription = new JTextField();
 		txtFieldDescription.setColumns(10);
@@ -173,50 +237,21 @@ public class TaskWindow extends JFrame {
 		txtFieldDate.setBounds(160, 218, 165, 24);
 		txtFieldDate.setText(timeStamp_);
 		getContentPane().add(txtFieldDate);
-
+		
+		buttonAdd = new JButton("Done");
+		buttonAdd.setBounds(403, 432, 117, 25);
+		getContentPane().add(buttonAdd);
+		buttonAdd.setVisible(false);
+		buttonEdit = new JButton("Done");
+		buttonEdit.setBounds(403, 432, 117, 25);
+		getContentPane().add(buttonEdit);
+		buttonEdit.setVisible(false);
 		appendUsersToCombo();
 	}
 
-	public TaskWindow() {
+	public TaskWindow(MainWindow mainWin) {
+		mainWin_ = mainWin;
 		createWinCore();
-		
-		JButton buttonDone = new JButton("Done");
-		buttonDone.setBounds(403, 432, 117, 25);
-		getContentPane().add(buttonDone);
-		
-		buttonDone.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent arg0) {	
-		String sql = "Insert into tasks (title, description, state, assignee, date_created) values (?, ?, ?, ?, ?)";
-
-		    try {
-		    	PreparedStatement pst = null;
-		    	pst = connection.prepareStatement(sql);
-		    	Task task = new Task();
-		        task.setTitle(txtFieldTitle.getText());
-		        task.setDescription(txtFieldDescription.getText());
-		        task.setState(String.valueOf(comboBoxState.getSelectedItem()));
-		        task.setAssignee(String.valueOf(comboBoxAssignee.getSelectedItem()));
-		        
-		        if (task.getTitle().equals("")) {
-		        	task.setTitle(null);
-		        }
-		        task.setDateCreated(new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime()));
-		     		        
-		        pst.setString(1, task.getTitle());
-		        pst.setString(2, task.getDescription());
-		        pst.setString(3, task.getState());
-		        pst.setString(4, task.getAssignee());
-		        pst.setString(5, task.getDateCreated());
-		        
-		        if (!pst.execute()) {
-		        	TaskListWindow.refreshTable();
-		        }
-		    } catch (Exception e) {
-		       JOptionPane.showConfirmDialog(null, e);
-		    }
-			dispose();
-			}
-		});
 	}
 	
 	public void comboSetSelectedByValue(JComboBox combo, String state) {
@@ -251,51 +286,10 @@ public class TaskWindow extends JFrame {
 				
 	}
 	
-	public TaskWindow(Task task) {
+	public TaskWindow(MainWindow mainWin, Task task) {
+		mainWin_ = mainWin;
 		createWinCore();
 		task_ = task;
-		
-		txtFieldTaskID.setText(Integer.toString(task.getId()));
-		txtFieldTitle.setText(task.getTitle());
-		txtFieldDescription.setText(task.getDescription());
-        txtFieldDate.setText(task.getDateCreated());
-        
-        storePrevVals(task);
-        
-        comboSetSelectedByValue(comboBoxState, task.getState());
-        comboSetSelectedByValue(comboBoxAssignee, task.getAssignee());
-		
-		JButton btnDone = new JButton("Done");
-		btnDone.setBounds(403, 432, 117, 25);
-		getContentPane().add(btnDone);
-		
-		btnDone.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent arg0) {	
-			if (needsUpdate()) {
-				String sql = "UPDATE tasks SET title = ?, description = ?, assignee = ?, state = ? WHERE id = ?";
-				Connection conn = JavaConnector.ConnectDb();		
-				try { 
-					PreparedStatement pst = conn.prepareStatement(sql);
-			  
-					pst.setString(1, txtFieldTitle.getText());
-					pst.setString(2, txtFieldDescription.getText());
-					pst.setString(3, comboBoxAssignee.getSelectedItem().toString());
-					pst.setString(4, comboBoxState.getSelectedItem().toString());
-					pst.setInt(5, task_.getId());
-			        
-		            pst.execute();
-		            TaskListWindow.refreshTable();
-
-				} catch (Exception e) {
-					JOptionPane.showConfirmDialog(null, e);
-			    }
-
-				
-			
-			}
-			
-			dispose();
-			}
-		});
 	}
+	
 }
